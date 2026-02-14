@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Haseeb Cold Corner · Clear Option · Bold Edit · Slip Fixed</title>
+    <!-- html2canvas optional (ab save hat gaya, par rakh sakte hain kisi aur kaam ke liye) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', system-ui, sans-serif;
+        }
+
+        body {
+            background: #c7af8f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+        }
+
+        .ledger-book {
+            width: 100%;
+            max-width: 360px;
+            background: #fefaf2;
+            border-radius: 20px 20px 16px 16px;
+            box-shadow: 0 8px 12px -4px #3f2c18;
+            padding: 0.6rem 0.3rem 0.8rem 0.3rem;
+            border: 1px solid #dbbc98;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            max-height: 700px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+
+        .brand-header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #392d1b;
+            text-shadow: 1px 1px 0 #e9d5bb;
+            font-family: 'Trebuchet MS', sans-serif;
+            white-space: nowrap;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
+            background: #eddecb;
+            padding: 0.3rem 0.5rem;
+            border-radius: 30px;
+            border: 1.5px solid #c4a27a;
+        }
+
+        .search-icon {
+            font-size: 1rem;
+            color: #6b4f2a;
+        }
+
+        #searchInput {
+            flex: 1;
+            background: #fffcf2;
+            border: 1px solid #b29068;
+            border-radius: 30px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #2c1f0e;
+            outline: none;
+        }
+
+        #searchInput::placeholder {
+            color: #9e8b72;
+            font-size: 0.65rem;
+        }
+
+        .search-clear {
+            background: #b29068;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0.2rem 0.6rem;
+            font-weight: 600;
+            font-size: 0.6rem;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #6b4f2a;
+            white-space: nowrap;
+        }
+
+        .search-clear:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            border-radius: 12px;
+            border: 1.5px solid #dbbc97;
+            background: #fffcf5;
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-bottom: 6px;
+            max-height: 380px;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .orders-table thead tr {
+            background: #b39268;
+            border-bottom: 2px solid #745b3a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .orders-table th {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #231e14;
+            padding: 0.4rem 0.02rem;
+            text-align: center;
+            border-right: 1px solid #c7a175;
+            text-transform: uppercase;
+            background: #ddb88b;
+            letter-spacing: 0.2px;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .orders-table th:last-child {
+            border-right: none;
+        }
+
+        .orders-table tbody tr {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e3cfb7;
+        }
+
+        .orders-table tbody tr.highlight-row {
+            background: #fff2b5 !important;
+        }
+        .highlight-row td {
+            background: #fff2b5 !important;
+        }
+        .highlight-row td input, .highlight-row td textarea {
+            background: #fff2b5 !important;
+        }
+
+        .orders-table td {
+            padding: 0.2rem 0.02rem;
+            border-right: 1px solid #ebcfb2;
+            text-align: center;
+            vertical-align: middle;
+            background-color: white;
+            color: #2b1f12;
+            font-size: 0.6rem;
+            height: auto;
+            word-break: break-word;
+        }
+
+        /* ===== BOLD TEXT when user edits ===== */
+        .orders-table input, .orders-table textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 0.6rem;
+            font-family: 'Courier New', monospace;
+            color: #2c1f0e;
+            font-weight: 700;           /* always bold for better visibility */
+            resize: none;
+            padding: 0.1rem 0;
+            outline: none;
+            border-radius: 4px;
+            line-height: 1.2;
+            min-height: 1.6em;
+            height: auto;
+        }
+
+        .orders-table input::placeholder, .orders-table textarea::placeholder {
+            color: #9e8b72;
+            font-size: 0.6rem;
+            font-style: normal;
+            opacity: 1;
+            font-weight: 500;           /* placeholder slightly less bold */
+        }
+
+        .orders-table input:focus, .orders-table textarea:focus {
+            background: #fff0dc;
+            box-shadow: 0 0 0 2px #c5a253;
+        }
+
+        .get-slip-btn {
+            background: #3f6b3f;
+            border: 1px solid #1d4d1d;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 700;
+            padding: 0.1rem 0.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 1.5px 0 #1b4b1b;
+            transition: 0.06s;
+            white-space: nowrap;
+            width: 90%;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .get-slip-btn:active {
+            transform: translateY(1.5px);
+            box-shadow: none;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 4px 0 2px;
+        }
+
+        .btn {
+            background: #eddecb;
+            border: 1.5px solid #b29068;
+            color: #3f2e1b;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #886f48;
+            transition: 0.07s;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* Clear All button (replaces Save) */
+        .clear-all-btn {
+            background: #b29068;
+            border: 1.5px solid #6b4f2a;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #5a3f20;
+            transition: 0.07s;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .clear-all-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #7f694b;
+            font-size: 0.45rem;
+            margin-top: 2px;
+        }
+
+        /* column widths */
+        .orders-table th:nth-child(1) { width: 13%; }
+        .orders-table th:nth-child(2) { width: 13%; }
+        .orders-table th:nth-child(3) { width: 8%; }
+        .orders-table th:nth-child(4) { width: 9%; }
+        .orders-table th:nth-child(5) { width: 19%; }
+        .orders-table th:nth-child(6) { width: 11%; }
+        .orders-table th:nth-child(7) { width: 12%; }
+        .orders-table th:nth-child(8) { width: 11%; }
+
+        /* ===== SLIP MODAL - NO TOTAL ORDER, only up to TOTAL RATE ===== */
+        .slip-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .slip-content {
+            background: white;
+            width: 260px;
+            max-width: 80vw;
+            padding: 1.2rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            font-family: 'Courier New', monospace;
+            color: black;
+            border: 2px solid #8b6f44;
+            position: relative;
+        }
+
+        .slip-header {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 0.3rem;
+            color: #2d2d2d;
+        }
+
+        .slip-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            border-bottom: 1px dotted #aaa;
+            padding-bottom: 0.2rem;
+        }
+
+        .slip-label {
+            font-weight: 700;
+            color: #3d2f1a;
+        }
+
+        .slip-value {
+            font-weight: 500;
+            max-width: 55%;
+            text-align: right;
+            word-break: break-word;
+            color: #1f1f1f;
+        }
+
+        .slip-footer {
+            margin-top: 1rem;
+            text-align: center;
+            border-top: 1px dashed #333;
+            padding-top: 0.5rem;
+        }
+
+        .slip-contact {
+            font-weight: bold;
+            font-size: 0.7rem;
+            letter-spacing: 0.3px;
+            color: #222;
+        }
+
+        .close-slip-x {
+            position: absolute;
+            top: 2px; right: 8px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            line-height: 1;
+        }
+        .close-slip-x:hover {
+            color: #000;
+        }
+
+        .promo-tag {
+            text-align: center;
+            color: #7f694b;
+            font-size: 0.45rem;
+            margin-top: 3px;
+            background: #e9dbc8;
+            padding: 0.1rem 0.3rem;
+            border-radius: 20px;
+            width: fit-content;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="ledger-book">
+        <div class="brand-header">
+            <h1>HASEEB COLD CORNER</h1>
+        </div>
+
+        <div class="search-section">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search Agency...">
+            <button class="search-clear" id="clearSearchBtn">✖</button>
+        </div>
+
+        <div class="table-wrapper" id="tableWrapper">
+            <table class="orders-table" id="mainLedger">
+                <thead>
+                    <tr>
+                        <th>DATE</th>
+                        <th>ORDERS</th>
+                        <th>ML</th>
+                        <th>PRICE</th>
+                        <th>AGENCY</th>
+                        <th>TOTAL RATE</th>
+                        <th>TOTAL ORDER</th>
+                        <th>SLIP</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- js rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn" id="addLineBtn">ADD LINE</button>
+            <!-- SAVE hata diya, ab CLEAR ALL button hai -->
+            <button class="clear-all-btn" id="clearAllBtn">CLEAR ALL</button>
+        </div>
+
+        <div class="footer-note">GET SLIP clean & small blur bg</div>
+        <div class="promo-tag">ENJOY 0 FEES ON THE HOTTEST TOKENS!</div>
+    </div>
+
+    <!-- SLIP MODAL - WITHOUT TOTAL ORDER -->
+    <div id="slipModal" class="slip-modal">
+        <div class="slip-content">
+            <span class="close-slip-x" id="closeSlipX">&times;</span>
+            <div class="slip-header">HASEEB COLD CORNER</div>
+            <div id="slipDetails" class="slip-details"></div>
+            <div class="slip-footer">
+                <span class="slip-contact">CONTACT +92 325 1138959</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const tbody = document.getElementById('tableBody');
+            let rowCount = 6;
+
+            function buildRows(rows) {
+                let html = '';
+                for (let i = 0; i < rows; i++) {
+                    if (i === 0) {
+                        // first row with sample values
+                        html += `<tr>
+                            <td><input type="text" placeholder="DD-MM-YYYY" value="13-5-2026"></td>
+                            <td><textarea rows="1" placeholder="order...">5</textarea></td>
+                            <td><input type="text" placeholder="ml" value="250"></td>
+                            <td><input type="text" placeholder="price" value="200"></td>
+                            <td><textarea rows="1" placeholder="agency...">Heseeb Balouch</textarea></td>
+                            <td><input type="text" placeholder="rate" value="1,000"></td>
+                            <td><input type="text" placeholder="total order" value="5"></td>
+                            <td><button class="get-slip-btn">SLIP</button></td>
+                        </tr>`;
+                    } else {
+                        // rows with only placeholders (symbols)
+                        html += `<tr>
+                            <td><input type="text" placeholder="DD-MM-YY" value=""></td>
+                            <td><textarea rows="1" placeholder="order..."></textarea></td>
+                            <td><input type="text" placeholder="ml"></td>
+                            <td><input type="text" placeholder="price"></td>
+                            <td><textarea rows="1" placeholder="agency..."></textarea></td>
+                            <td><input type="text" placeholder="rate"></td>
+                            <td><input type="text" placeholder="total"></td>
+                            <td><button class="get-slip-btn">SLIP</button></td>
+                        </tr>`;
+                    }
+                }
+                tbody.innerHTML = html;
+            }
+
+            function expandTextarea(e) {
+                const ta = e.target;
+                ta.style.height = 'auto';
+                ta.style.height = (ta.scrollHeight) + 'px';
+            }
+
+            function attachAllEvents() {
+                tbody.querySelectorAll('textarea').forEach(ta => {
+                    ta.removeEventListener('input', expandTextarea);
+                    ta.addEventListener('input', expandTextarea);
+                    setTimeout(() => {
+                        ta.style.height = 'auto';
+                        ta.style.height = ta.scrollHeight + 'px';
+                    }, 0);
+                });
+
+                tbody.querySelectorAll('.get-slip-btn').forEach(btn => {
+                    btn.removeEventListener('click', slipClickHandler);
+                    btn.addEventListener('click', slipClickHandler);
+                });
+            }
+
+            function slipClickHandler(e) {
+                const btn = e.target;
+                const row = btn.closest('tr');
+                if (!row) return;
+
+                const dateInp = row.querySelector('td:nth-child(1) input');
+                const ordersTa = row.querySelector('td:nth-child(2) textarea');
+                const mlInp = row.querySelector('td:nth-child(3) input');
+                const priceInp = row.querySelector('td:nth-child(4) input');
+                const agencyTa = row.querySelector('td:nth-child(5) textarea');
+                const rateInp = row.querySelector('td:nth-child(6) input');
+                // TOTAL ORDER intentionally NOT included in slip
+
+                const date = dateInp ? dateInp.value : '';
+                const orders = ordersTa ? ordersTa.value : '';
+                const ml = mlInp ? mlInp.value : '';
+                const price = priceInp ? priceInp.value : '';
+                const agency = agencyTa ? agencyTa.value : '';
+                const rate = rateInp ? rateInp.value : '';
+
+                // Only show fields up to TOTAL RATE (no TOTAL ORDER)
+                document.getElementById('slipDetails').innerHTML = `
+                    <div class="slip-row"><span class="slip-label">DATE :</span><span class="slip-value">${date || '—'}</span></div>
+                    <div class="slip-row"><span class="slip-label">ORDERS :</span><span class="slip-value">${orders || '—'}</span></div>
+                    <div class="slip-row"><span class="slip-label">ML :</span><span class="slip-value">${ml || '—'}</span></div>
+                    <div class="slip-row"><span class="slip-label">PRICE :</span><span class="slip-value">${price || '—'}</span></div>
+                    <div class="slip-row"><span class="slip-label">AGENCY :</span><span class="slip-value">${agency || '—'}</span></div>
+                    <div class="slip-row"><span class="slip-label">TOTAL RATE :</span><span class="slip-value">${rate || '—'}</span></div>
+                `;
+                document.getElementById('slipModal').style.display = 'flex';
+            }
+
+            buildRows(rowCount);
+            attachAllEvents();
+
+            // ADD LINE button
+            document.getElementById('addLineBtn').addEventListener('click', function() {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><input type="text" placeholder="DD-MM-YY" value=""></td>
+                    <td><textarea rows="1" placeholder="order..."></textarea></td>
+                    <td><input type="text" placeholder="ml"></td>
+                    <td><input type="text" placeholder="price"></td>
+                    <td><textarea rows="1" placeholder="agency..."></textarea></td>
+                    <td><input type="text" placeholder="rate"></td>
+                    <td><input type="text" placeholder="total"></td>
+                    <td><button class="get-slip-btn">SLIP</button></td>
+                `;
+                tbody.appendChild(newRow);
+                rowCount++;
+                const textareas = newRow.querySelectorAll('textarea');
+                textareas.forEach(ta => {
+                    ta.addEventListener('input', expandTextarea);
+                    setTimeout(() => { ta.style.height = ta.scrollHeight + 'px'; }, 0);
+                });
+                newRow.querySelector('.get-slip-btn').addEventListener('click', slipClickHandler);
+            });
+
+            // CLEAR ALL button - replaces SAVE
+            document.getElementById('clearAllBtn').addEventListener('click', function() {
+                // Reset all inputs and textareas to empty (clear all data)
+                tbody.querySelectorAll('input, textarea').forEach(field => {
+                    if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') {
+                        field.value = '';
+                    }
+                });
+                // Optional: remove highlight if any
+                tbody.querySelectorAll('tr').forEach(row => row.classList.remove('highlight-row'));
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            function searchAgency() {
+                const q = searchInput.value.trim().toLowerCase();
+                tbody.querySelectorAll('tr').forEach(row => row.classList.remove('highlight-row'));
+                if (q === '') return;
+                tbody.querySelectorAll('tr').forEach(row => {
+                    const agencyTa = row.querySelector('td:nth-child(5) textarea');
+                    if (agencyTa && agencyTa.value.trim().toLowerCase().includes(q)) {
+                        row.classList.add('highlight-row');
+                    }
+                });
+            }
+            searchInput.addEventListener('input', searchAgency);
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                searchAgency();
+            });
+
+            // Modal close
+            const modal = document.getElementById('slipModal');
+            const closeX = document.getElementById('closeSlipX');
+
+            function closeModal() { modal.style.display = 'none'; }
+            closeX.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        })();
+    </script>
+</body>
+</html>
